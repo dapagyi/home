@@ -32,7 +32,6 @@
 <body>
   Hello World!
   <br />
-  <!-- <button onClick="enableNotifications();">Enable notifications</button> -->
   <br />
   <div id="token"></div>
   <script>
@@ -41,35 +40,26 @@
     };
 
     const messaging = firebase.messaging();
-    messaging.getToken({ vapidKey: config.fcmKey }).then((currentToken) => {
-      if (currentToken) {
-        console.log(currentToken);
-        document.getElementById('token').innerHTML = currentToken;
-        // sendTokenToServer(currentToken);
-        // updateUIForPushEnabled(currentToken);
-      } else {
-        // Show permission request.
-        console.log('No registration token available. Request permission to generate one.');
-        // Show permission UI.
-        // updateUIForPushPermissionRequired();
-        // setTokenSentToServer(false);
-      }
-    }).catch((err) => {
-      console.log('An error occurred while retrieving token. ', err);
-      // showToken('Error retrieving registration token. ', err);
-      // setTokenSentToServer(false);
-    });
+    navigator.serviceWorker.register('./home/firebase-messaging-sw.js')
+      .then((registration) => {
+        messaging.useServiceWorker(registration);
 
-    messaging.onMessage((payload) => {
-      console.log('Message received. ', payload);
-      // ...
-    });
-
-
-    // const enableNotifications = () => {
-    //   console.log('Button clicked.');
-    //   console.log('Notifications enabled.');
-    // };
+        messaging.getToken({ vapidKey: config.fcmKey }).then((currentToken) => {
+          if (currentToken) {
+            console.log(currentToken);
+            document.getElementById('token').innerHTML = currentToken;
+          } else {
+            console.log('No registration token available. Request permission to generate one.');
+          }
+        }).catch((err) => {
+          console.log('An error occurred while retrieving token. ', err);
+        });
+    
+        messaging.onMessage((payload) => {
+          console.log('Message received. ', payload);
+        });
+        
+      });
   </script>
 </body>
 
