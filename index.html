@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.2.1/firebase-app.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.1.2/firebase-messaging.js"></script>
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyB3ISNhVo78qbczQgPAbjXPnd1_wXjDajk",
+      authDomain: "my-awesome-project-d1169.firebaseapp.com",
+      databaseURL: "https://my-awesome-project-d1169.firebaseio.com",
+      projectId: "my-awesome-project-d1169",
+      storageBucket: "my-awesome-project-d1169.appspot.com",
+      messagingSenderId: "50967587199",
+      appId: "1:50967587199:web:f3e5444b4908d29fc8124a"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
+</head>
+
+<body>
+  Hello World!
+  <br />
+  <!-- <button onClick="enableNotifications();">Enable notifications</button> -->
+  <br />
+  <div id="token"></div>
+  <script>
+    const config = {
+      fcmKey: 'BEq1_Y-dsUtm8eeHEMmhMeHY7kciN8aePdJlpCv8MTm5MfDhHdPm037Z7ZHkihyOaTUVU3-OI2d5Ct2Rn0T8y_Y',
+    };
+
+    const messaging = firebase.messaging();
+    messaging.getToken({ vapidKey: config.fcmKey }).then((currentToken) => {
+      if (currentToken) {
+        console.log(currentToken);
+        document.getElementById('token').innerHTML = currentToken;
+        // sendTokenToServer(currentToken);
+        // updateUIForPushEnabled(currentToken);
+      } else {
+        // Show permission request.
+        console.log('No registration token available. Request permission to generate one.');
+        // Show permission UI.
+        // updateUIForPushPermissionRequired();
+        // setTokenSentToServer(false);
+      }
+    }).catch((err) => {
+      console.log('An error occurred while retrieving token. ', err);
+      // showToken('Error retrieving registration token. ', err);
+      // setTokenSentToServer(false);
+    });
+
+    messaging.onMessage((payload) => {
+      console.log('Message received. ', payload);
+      // ...
+    });
+
+
+    // const enableNotifications = () => {
+    //   console.log('Button clicked.');
+    //   console.log('Notifications enabled.');
+    // };
+  </script>
+</body>
+
+</html>
